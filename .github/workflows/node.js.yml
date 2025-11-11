@@ -32,13 +32,13 @@ jobs:
       #   run: npm test -- --browsers=ChromeHeadless --no-watch --no-progress --bail
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-node-app:latest -f angular-17-crud-example/Dockerfile
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/angular-17-crud-example:latest .
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-node-app:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/angular-17-crud-example:latest
 
       - name: Verify Docker image
         run: docker images
