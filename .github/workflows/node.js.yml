@@ -32,7 +32,7 @@ jobs:
       #   run: npm test -- --browsers=ChromeHeadless --no-watch --no-progress --bail
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-node-app:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-node-app:latest -f angular-17-crud-example/Dockerfile frontend
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
