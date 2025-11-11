@@ -4,10 +4,11 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -42,3 +43,23 @@ jobs:
 
       - name: Verify Docker image
         run: docker images
+        
+  deploy:
+    name: Deploy to Minikube
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: production   # 👈 requires manual approval
+    steps:
+      - name: Checkout code
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Deploy application
+        run: |
+          kubectl delete deployment angular17crud-deployment --ignore-not-found=true
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl rollout status deployment/angular17crud-deployment --timeout=60s
