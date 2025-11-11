@@ -29,7 +29,7 @@ jobs:
         run: npm run build --if-present
 
       - name: Run tests
-        run: npm test || echo "no tests"
+        run: npm test -- --browsers=ChromeHeadless --no-watch --no-progress --bail
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ts-app:latest .
