@@ -57,9 +57,24 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Deploy application
+      - name: Verify Helm
+        run: helm version
+
+      - name: Deploy using Helm
         run: |
-          kubectl delete deployment angular17crud-deployment --ignore-not-found=true
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-          kubectl rollout status deployment/angular17crud-deployment --timeout=60s
+          helm upgrade --install angular17crud-release ./angular17crud \
+            --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/angular-17-crud-example \
+            --set image.tag=latest \
+            --set image.pullPolicy=Always \
+            --set service.type=NodePort \
+            --set service.port=8080 \
+            --set service.nodePort=30081
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/angular17crud-release --timeout=60s
+          kubectl get pods -o wide
+          kubectl get svc angular17crud-release
+      
+         
+          
