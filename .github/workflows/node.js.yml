@@ -72,9 +72,9 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          kubectl rollout status deployment/angular17crud-release --timeout=60s
+          kubectl rollout status deployment/angular17crud --timeout=60s
           kubectl get pods -o wide
-          kubectl get svc angular17crud-release
+          kubectl get svc angular17crud
       
          
           
