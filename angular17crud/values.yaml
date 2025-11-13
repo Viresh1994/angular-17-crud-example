@@ -1,0 +1,14 @@
+replicaCount: 1
+
+image:
+  repository: viresh1994/angular-17-crud-example
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30081
+
+imagePullSecrets:
+  - name: dockerhub-secret
