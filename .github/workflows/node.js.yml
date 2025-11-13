@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: Angular
 
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +45,7 @@ jobs:
         
   deploy:
     name: Deploy to Minikube
-    runs-on: ubuntu-latest
+    runs-on: Angular
     needs: build
     environment:
       name: production   # 👈 requires manual approval
