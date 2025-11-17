@@ -1,1 +1,58 @@
+name: Apply SCIM Schema
 
+on:
+  # push:
+  #   branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  apply-schema:
+    runs-on: Angular
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: scimdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U github"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install PostgreSQL client
+      - name: Install PostgreSQL client
+        run: |
+           echo "viresh1994" | sudo apt-get update
+           echo "viresh1994" | sudo apt-get install -y postgresql-client
+
+      # Wait for PostgreSQL to be ready
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432 -U github; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep 3
+          done
+
+      - name: Show client version
+        run: psql --version
+
+      # Apply SCIM schema file
+      - name: Apply SCIM schema
+        env:
+          PGPASSWORD: password
+        run: |
+          psql -h localhost -U github -d postgres -f scim_schema.sql
