@@ -72,5 +72,5 @@ jobs:
         env:
           PGPASSWORD: password
         run: |
-          echo "=== Running original SQL file: scripts/scim.sql ==="
-          psql -h localhost -U github -d damsapp -f scripts/scim.sql
+          echo "=== Running original SQL file: script/scim.sql ==="
+          psql -h localhost -U github -d damsapp -f script/scim.sql
