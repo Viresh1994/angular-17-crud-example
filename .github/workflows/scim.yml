@@ -59,18 +59,32 @@ jobs:
           echo "Listing repository files..."
           ls -R
 
-      - name: Validate SQL in strict mode (ON_ERROR_STOP)
-        env:
-          PGPASSWORD: password
-        run: |
-          echo "Running in strict mode to catch errors"
-          # Prepend ON_ERROR_STOP so any SQL error fails the pipeline
-          echo "\set ON_ERROR_STOP on" | cat - script/scim.sql > script/damsapp_debug.sql
-          psql -h localhost -U github -d postgres -f script/scim.sql
+      # - name: Validate SQL in strict mode (ON_ERROR_STOP)
+      #   env:
+      #     PGPASSWORD: password
+      #   run: |
+      #     echo "Running in strict mode to catch errors"
+      #     # Prepend ON_ERROR_STOP so any SQL error fails the pipeline
+      #     echo "\set ON_ERROR_STOP on" | cat - script/scim.sql > script/damsapp_debug.sql
+      #     psql -h localhost -U github -d postgres -f script/scim.sql
 
-      - name: Run original SQL file
+      - name: Run SCIM SQL with strict error checking
         env:
           PGPASSWORD: password
         run: |
-          echo "=== Running original SQL file: script/scim.sql ==="
-          psql -h localhost -U github -d postgres -f script/scim.sql
+          set -euo pipefail
+          echo "=== Running script/scim.sql with ON_ERROR_STOP enabled ==="
+          # Connect to 'postgres' so the script can DROP/CREATE damsapp and then \connect into it
+          psql \
+            -h localhost \
+            -U github \
+            -d postgres \
+            -v ON_ERROR_STOP=1 \
+            -f script/scim.sql
+
+      # - name: Run original SQL file
+      #   env:
+      #     PGPASSWORD: password
+      #   run: |
+      #     echo "=== Running original SQL file: script/scim.sql ==="
+      #     psql -h localhost -U github -d postgres -f script/scim.sql
