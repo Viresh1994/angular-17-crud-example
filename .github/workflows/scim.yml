@@ -1,0 +1,76 @@
+name: Validate DamsApp Postgres SQL
+
+on:
+  # push:
+  #   paths:
+  #     - "scripts/damsapp.sql"
+  #     - ".github/workflows/damsapp-postgres.yml"
+  # pull_request:
+  #   paths:
+  #     - "scripts/damsapp.sql"
+    workflow_dispatch:
+
+jobs:
+  postgres-sql-validate:
+    runs-on: Angular
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: damsapp   # Database to connect to
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U github"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          echo "viresh1994" | sudo -S apt-get update
+          echo "viresh1994" | sudo -S apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432 -U github; then
+              echo "✅ Postgres is ready!"
+              exit 0
+            fi
+            echo "⏳ Waiting for Postgres..."
+            sleep 5
+          done
+          echo "❌ Postgres did not become ready in time"
+          exit 1
+
+      - name: Show client version
+        run: psql --version
+
+      - name: List repository files (debug)
+        run: |
+          echo "Listing repository files..."
+          ls -R
+
+      - name: Validate SQL in strict mode (ON_ERROR_STOP)
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "Running in strict mode to catch errors"
+          # Prepend ON_ERROR_STOP so any SQL error fails the pipeline
+          echo "\set ON_ERROR_STOP on" | cat - scripts/scim.sql > script/damsapp_debug.sql
+          psql -h localhost -U github -d damsapp -f script/scim.sql
+
+      - name: Run original SQL file
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "=== Running original SQL file: scripts/scim.sql ==="
+          psql -h localhost -U github -d damsapp -f scripts/scim.sql
