@@ -2,6 +2,7 @@
 DROP DATABASE IF EXISTS DamsApp;
 CREATE DATABASE DamsApp;
 
+\connect damsapp;
 --Postgres doesn’t support USE DamsApp;
 --USE DamsApp;
 
