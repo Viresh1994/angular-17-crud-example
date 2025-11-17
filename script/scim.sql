@@ -49,7 +49,8 @@ CREATE TABLE scim_groups (
     external_id VARCHAR(255),
     created TIMESTAMP,
     --created DATETIME,  Postgres uses TIMESTAMP not DATETIME
-    last_modified DATETIME,
+    last_modified TIMESTAMP,
+    --last_modified DATETIME,
     resource_type VARCHAR(50)
 );
 
