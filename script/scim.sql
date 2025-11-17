@@ -7,7 +7,7 @@ CREATE DATABASE DamsApp;
 
 -- Drop tables if they exist
 DROP TABLE IF EXISTS group_members;
---DROP TABLE IF EXISTS scim_groups;
+DROP TABLE IF EXISTS scim_groups;
 DROP TABLE IF EXISTS scim_user_roles;
 DROP TABLE IF EXISTS scim_user_emails;
 DROP TABLE IF EXISTS scim_users;
