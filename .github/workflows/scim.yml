@@ -82,11 +82,11 @@ jobs:
             -v ON_ERROR_STOP=1 \
             -f script/scim.sql
 
-      - name: Verify data
-        env:
-          PGPASSWORD: password
-        run: |
-          psql -h localhost -U github -d postgres -c "SELECT * FROM scim_users;"
+      # - name: Verify data
+      #   env:
+      #     PGPASSWORD: password
+      #   run: |
+      #     psql -h localhost -U github -d postgres -c "SELECT * FROM scim_users;"
 
       - name: Verify SCIM tables and data
         env:
