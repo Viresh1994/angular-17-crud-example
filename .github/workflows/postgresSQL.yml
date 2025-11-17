@@ -55,4 +55,4 @@ jobs:
         env:
           PGPASSWORD: password
         run: |
-          psql -h localhost -U github -d postgres -f scim_schema.sql
+          psql -h localhost -U github -d postgres -f scripts/scim_schema.sql
