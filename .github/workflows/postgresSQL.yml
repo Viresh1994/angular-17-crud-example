@@ -50,6 +50,20 @@ jobs:
       - name: Show client version
         run: psql --version
 
+      - name: List repo files
+        run: |
+          echo "Listing repository files..."
+          ls -R
+          
+      - name: Debug – validate SQL syntax
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "Running in strict mode to catch errors"
+          echo "\set ON_ERROR_STOP on" | cat - scripts/scim_schema.sql > scripts/sql_debug.sql
+          psql -h localhost -U github -d postgres -f scripts/sql_debug.sql
+   
+
       # Apply SCIM schema file
       - name: Apply SCIM schema
         env:
