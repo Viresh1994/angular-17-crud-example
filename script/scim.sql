@@ -1,11 +1,13 @@
 -- Create database
 DROP DATABASE IF EXISTS DamsApp;
 CREATE DATABASE DamsApp;
-USE DamsApp;
+
+--Postgres doesn’t support USE DamsApp;
+--USE DamsApp;
 
 -- Drop tables if they exist
 DROP TABLE IF EXISTS group_members;
-DROP TABLE IF EXISTS scim_groups;
+--DROP TABLE IF EXISTS scim_groups;
 DROP TABLE IF EXISTS scim_user_roles;
 DROP TABLE IF EXISTS scim_user_emails;
 DROP TABLE IF EXISTS scim_users;
@@ -45,7 +47,8 @@ CREATE TABLE scim_groups (
     id CHAR(36) PRIMARY KEY,
     display_name VARCHAR(255) UNIQUE NOT NULL,
     external_id VARCHAR(255),
-    created DATETIME,
+    created TIMESTAMP,
+    --created DATETIME,  Postgres uses TIMESTAMP not DATETIME
     last_modified DATETIME,
     resource_type VARCHAR(50)
 );
