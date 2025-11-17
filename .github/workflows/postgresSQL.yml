@@ -70,3 +70,17 @@ jobs:
           PGPASSWORD: password
         run: |
           psql -h localhost -U github -d postgres -f scripts/scim_schema.sql
+
+      - name: Verify SCIM tables created
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "=== Listing SCIM tables ==="
+          psql -h localhost -U github -d scimdb -c "\dt"
+
+          echo -e "\n=== Describe SCIM Users Table ==="
+          psql -h localhost -U github -d scimdb -c "\d scim_users"
+
+          echo -e "\n=== Describe SCIM Groups Table ==="
+          psql -h localhost -U github -d scimdb -c "\d scim_groups"
+
