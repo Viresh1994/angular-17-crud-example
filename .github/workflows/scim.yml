@@ -65,7 +65,7 @@ jobs:
         run: |
           echo "Running in strict mode to catch errors"
           # Prepend ON_ERROR_STOP so any SQL error fails the pipeline
-          echo "\set ON_ERROR_STOP on" | cat - scripts/scim.sql > script/damsapp_debug.sql
+          echo "\set ON_ERROR_STOP on" | cat - script/scim.sql > script/damsapp_debug.sql
           psql -h localhost -U github -d damsapp -f script/scim.sql
 
       - name: Run original SQL file
