@@ -82,6 +82,12 @@ jobs:
             -v ON_ERROR_STOP=1 \
             -f script/scim.sql
 
+      - name: Verify data
+        env:
+          PGPASSWORD: password
+        run: |
+          psql -h localhost -U github -d damsapp -c "SELECT * FROM scim_users;"
+
       # - name: Run original SQL file
       #   env:
       #     PGPASSWORD: password
