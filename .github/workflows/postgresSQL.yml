@@ -32,8 +32,8 @@ jobs:
       # Install PostgreSQL client
       - name: Install PostgreSQL client
         run: |
-           echo "viresh1994" | sudo apt-get update
-           echo "viresh1994" | sudo apt-get install -y postgresql-client
+           sudo apt-get update
+           sudo apt-get install -y postgresql-client
 
       # Wait for PostgreSQL to be ready
       - name: Wait for PostgreSQL
