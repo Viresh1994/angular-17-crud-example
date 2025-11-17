@@ -86,7 +86,7 @@ jobs:
         env:
           PGPASSWORD: password
         run: |
-          psql -h localhost -U github -d damsapp -c "SELECT * FROM scim_users;"
+          psql -h localhost -U github -d postgres -c "SELECT * FROM scim_users;"
 
       # - name: Run original SQL file
       #   env:
