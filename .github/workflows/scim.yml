@@ -20,7 +20,7 @@ jobs:
         env:
           POSTGRES_USER: github
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: damsapp   # Database to connect to
+          POSTGRES_DB: postgres   # Database to connect to
         ports:
           - 5432:5432
         options: >-
@@ -66,11 +66,11 @@ jobs:
           echo "Running in strict mode to catch errors"
           # Prepend ON_ERROR_STOP so any SQL error fails the pipeline
           echo "\set ON_ERROR_STOP on" | cat - script/scim.sql > script/damsapp_debug.sql
-          psql -h localhost -U github -d damsapp -f script/scim.sql
+          psql -h localhost -U github -d postgres -f script/scim.sql
 
       - name: Run original SQL file
         env:
           PGPASSWORD: password
         run: |
           echo "=== Running original SQL file: script/scim.sql ==="
-          psql -h localhost -U github -d damsapp -f script/scim.sql
+          psql -h localhost -U github -d postgres -f script/scim.sql
