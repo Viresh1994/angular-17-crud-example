@@ -88,9 +88,18 @@ jobs:
         run: |
           psql -h localhost -U github -d postgres -c "SELECT * FROM scim_users;"
 
-      # - name: Run original SQL file
-      #   env:
-      #     PGPASSWORD: password
-      #   run: |
-      #     echo "=== Running original SQL file: script/scim.sql ==="
-      #     psql -h localhost -U github -d postgres -f script/scim.sql
+      - name: Verify SCIM tables and data
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "🔎 Listing tables in damsapp..."
+          psql -h localhost -U github -d damsapp -c "\dt"
+
+          echo "🔎 Checking scim_users data..."
+          psql -h localhost -U github -d damsapp -c "SELECT * FROM scim_users;"
+
+          echo "🔎 Checking scim_groups data..."
+          psql -h localhost -U github -d damsapp -c "SELECT * FROM scim_groups;"
+
+          echo "🔎 Checking group_members data..."
+          psql -h localhost -U github -d damsapp -c "SELECT * FROM group_members;"
